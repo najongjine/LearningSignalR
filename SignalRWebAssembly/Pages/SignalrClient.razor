@@ -3,6 +3,7 @@
 @inject NavigationManager NavigationManager
 @implements IAsyncDisposable
 
+<div>Connection Id: @hubConnection.ConnectionId</div>
 <div class="row" style="padding-top: 50px;">
   <div class="col-md-4">
     <div class="control-group">
@@ -44,6 +45,7 @@
     });
 
     await hubConnection.StartAsync();
+    
   }
 
   private Task BroadcastMessage() =>

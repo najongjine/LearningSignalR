@@ -35,6 +35,28 @@ namespace SignalRAPI
       {
         builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
       }));
+      
+      /* demo purpose code */
+      /*
+      services.AddCors(options =>
+      {
+        options.AddPolicy("signalr",
+          builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+        //only get moethod is allowed
+        options.AddPolicy("AllowAnyGet",
+            builder => builder.AllowAnyOrigin()
+                .WithMethods("GET")
+                .AllowAnyHeader()
+                .AllowCredentials());
+
+        //only certain url is allowed 
+        options.AddPolicy("AllowExampleDomain",
+            builder => builder.WithOrigins("https://example.com")
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials());
+      });
+    */
       services.AddRouting(option => option.LowercaseUrls = true);
       services.AddControllers().AddJsonOptions(opt => opt.JsonSerializerOptions.PropertyNamingPolicy = null)
         .AddNewtonsoftJson(opt =>
@@ -58,6 +80,7 @@ namespace SignalRAPI
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
       app.UseResponseCompression();
+
       if (env.IsDevelopment())
       {
         app.UseDeveloperExceptionPage();
@@ -67,6 +90,10 @@ namespace SignalRAPI
 
       /* API 외부 앱(클라)에서 요청을 받게끔 열어주는 코드 */
       app.UseCors("signalr");
+
+      /* demo purpose code*/
+      //app.UseCors("AllowAnyGet").UseCors("AllowExampleDomain");
+      
       app.UseRouting();
 
       app.UseAuthorization();
@@ -74,6 +101,8 @@ namespace SignalRAPI
       app.UseEndpoints(endpoints =>
       {
         endpoints.MapControllers();
+
+        //SignalR
         endpoints.MapHub<LearningHub>("/learningHub");
       });
     }
